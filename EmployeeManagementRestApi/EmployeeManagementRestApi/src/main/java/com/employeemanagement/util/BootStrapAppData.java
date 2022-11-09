@@ -1,0 +1,46 @@
+package com.employeemanagement.util;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.employeemanagement.model.Role;
+import com.employeemanagement.model.User;
+import com.employeemanagement.repository.UserRepository;
+
+@Configuration
+public class BootStrapAppData {
+	@Autowired
+	UserRepository userRepositoy;
+	@Autowired
+	PasswordEncoder passwordEncoder;
+
+	@EventListener(ApplicationReadyEvent.class)
+	public void InsertUsersAndRoles() {
+		User nishant = new User();
+		nishant.setUsername("Nishant");
+		nishant.setPassword(passwordEncoder.encode("password"));
+
+		Role peeyushRole = new Role();
+		peeyushRole.setRoleName("USER");
+
+		Role nishantRole = new Role();
+		nishantRole.setRoleName("ADMIN");
+
+		nishantRole.setUser(nishant);
+		nishant.addRole(nishantRole);
+
+		User peeyush = new User();
+		peeyush.setUsername("Peeyush");
+		peeyush.setPassword(passwordEncoder.encode("password"));
+		peeyushRole.setUser(peeyush);
+		peeyush.addRole(peeyushRole);
+
+		this.userRepositoy.save(peeyush);
+		this.userRepositoy.save(nishant);
+
+	}
+
+}

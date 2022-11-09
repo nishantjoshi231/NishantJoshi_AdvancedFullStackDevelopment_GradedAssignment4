@@ -1,0 +1,17 @@
+package com.employeemanagement.util;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+
+import com.employeemanagement.model.User;
+import com.employeemanagement.repository.UserRepository;
+
+@Configuration
+
+public class BootstrapAppData {
+@Autowired	
+UserRepository userRepository;
+
+     User nishant=new User();
+ nishant.
+}

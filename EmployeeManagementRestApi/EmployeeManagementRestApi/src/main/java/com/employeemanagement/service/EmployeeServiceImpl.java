@@ -1,0 +1,71 @@
+package com.employeemanagement.service;
+
+import java.util.List;
+
+import org.hibernate.criterion.Example;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.stereotype.Service;
+import com.employeemanagement.model.Employee;
+import com.employeemanagement.repository.EmployeeRepository;
+
+@Service
+public class EmployeeServiceImpl implements EmployeeService {
+	@Autowired
+	EmployeeRepository employeeRepository;
+
+	@Override
+	public List<Employee> findAll() {
+		List<Employee> employee = employeeRepository.findAll();
+		return employee;
+	}
+
+	@Override
+	public Employee findById(long employeeId) {
+		Employee employee = employeeRepository.findById(employeeId)
+				.orElseThrow(() -> new IllegalArgumentException("invalid Id passed.."));
+		return employee;
+
+	}
+
+	@Override
+	public Employee saveEmployee(Employee employee) {
+		Employee savedEmployee = employeeRepository.save(employee);
+		return savedEmployee;
+	}
+
+	@Override
+	public Employee updateEmployee(long id, Employee employee) {
+		Employee emp = findById(id);
+		emp.setFirstName(employee.getFirstName());
+		emp.setLastName(employee.getLastName());
+		emp.setEmail(employee.getEmail());
+		employeeRepository.save(emp);
+		return emp;
+      
+	}
+
+	@Override
+	public void deleteAll() {
+		employeeRepository.deleteAll();
+	}
+
+	@Override
+	public void deletebyId(long id) {
+		employeeRepository.deleteById(id);
+		System.out.println("Deleted Employee Id is" + id);
+	}
+	
+	@Override
+	public List<Employee> findByFirstName(String firstName){
+		return employeeRepository.findByFirstName(firstName);
+	}
+	
+	@Override
+	public List<Employee> getEmployeeSortedByFirstName(Direction direction){
+		return employeeRepository.findAll(Sort.by(direction, "firstName"));
+	}
+	
+}
